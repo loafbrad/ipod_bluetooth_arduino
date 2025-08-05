@@ -98,5 +98,5 @@ These steps only cover programming the microcontroller with the firmware provide
 
 | Storage   |  Available   |  Utilization      |
 |-----------|--------------|-------------------|
-|  Flash    |   4096 Bytes |  3714 Bytes (90%) |
-|  RAM      |   256 Bytes  |  133 Bytes (51%)  |
+|  Flash    |   8192 Bytes |  3500 Bytes (43%) |
+|  RAM      |   512 Bytes  |  149 Bytes (29%)  |
