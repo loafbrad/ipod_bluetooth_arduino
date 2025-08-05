@@ -83,7 +83,7 @@ Download and install the Arduino IDE from the link above. At this time everythin
 
 ## 4. Programming ATtiny85 with Arduino Uno
 
-- First, select `Tools->Burn Bootloader` **This step is very important`. It saves the settings made in the previous step to the ATtiny.
+- First, select `Tools->Burn Bootloader` **This step is very important**. It saves the settings made in the previous step to the ATtiny.
 - `Tools->Programmer->Arduino as ISP`
 - Click the `Verify` button in the top left corner of the window to verify the program before it get's programmed to the ATtiny85.
 - If there are no program errors, select `upload` and the program will be uploaded to the ATtiny85 via the Arduino Uno.
