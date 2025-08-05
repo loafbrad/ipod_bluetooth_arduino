@@ -1,31 +1,35 @@
-
+// ATtiny45 implementation
+// Removed debug prints to save memory
 #include <SoftwareSerial.h>
 #include "bt_control.hpp"
 
-SoftwareSerial ipodserial(RX_PIN, TX_PIN);
+//Serial ipodserial();
 BtControl airfly_state;
 
 void setup() {
   // NOTE: This value will need to be adjusted depending on what oscillator speed is set to.
   // Multiply by 2 if running at 8MHz internal oscillator.
-  ipodserial.begin(9600);
+  Serial.begin(9600);
 
   // Connecting the LED pin outputs on the Airfly Pro to these two input pins
-  pinMode(LED_0, INPUT_PULLUP);
-  pinMode(LED_1, INPUT_PULLUP);
-  DDRB  = 0xFF;
-  PORTB = 0xFF;
+ // pinMode(LED_0, INPUT_PULLUP);
+ // pinMode(LED_1, INPUT_PULLUP);
+  DDRB  |= 0b00001000;
+  DDRB  &= 0b11101111;
+  PORTB |= 0b00001000;
 
   // Configure internal timer
+  // Section 12.3 of ATtiny25/45/85 [DATASHEET] Rev. 2586Q–AVR–08/2013
   cli();
-  TCCR1A = 0;
-  TCCR1B = 0;
-  TCCR1B |= 0b00000100;
-  TIMSK1 |= 0b00000010;
+  // Divide counter1 by 256
+  TCCR1  = 0b00001001;
+  // Use system clock 8Mhz for Timer1
+  PLLCSR = 0b00000000;
+  // OCIE1A enable
+  TIMSK |= 0b01000000;
   // NOTE: Adjust timer here based on target clock frequency to trigger interrupt at desired interval.
-  // (In this particular case I say 62/2 as I reprogrammed the AVR chip to run on 8MHz internal RC oscillator vs
-  // the 16MHz external clock during prototyping phase.)
-  OCR1A = 62/2;
+  // ~1ms
+  OCR1A = 32;
   sei();
 }
 
@@ -36,23 +40,26 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 void loop() {
-  if (ipodserial.available() > 0) {
+  if ((PINB&(1 << PINB4)))  airfly_state.power_on();
+
+
+  if (Serial.available() > 0) {
     // Read serial input from the iPod
-    String fromipod = ipodserial.readStringUntil('\n');
+    String fromipod = Serial.readStringUntil('\n');
     fromipod.trim();
 
     // Perform action based on 
     if (fromipod.equals("btc_poweron")) {
-      ipodserial.println("Powering on!");
+      //ipodserial.println("Powering on!");
       airfly_state.power_on();
     } else if (fromipod.equals("btc_poweroff")) {
-      ipodserial.println("Powering off!");
+      //ipodserial.println("Powering off!");
       airfly_state.power_off();
     } else if (fromipod.equals("btc_pair")) {
-      ipodserial.println("Paring!");
+      //ipodserial.println("Paring!");
       airfly_state.pair();
     } else if (fromipod.equals("btc_status")) {
-      ipodserial.println(airfly_state.get_status());
+      Serial.println(airfly_state.get_status());
     }  
   }
 }

@@ -1,12 +1,12 @@
 #ifndef __BT_CONTROL_H__
 #define __BT_CONTROL_H__
 
-#define MAIN_BUTTON      12
-#define RESET_BUTTON     1
-#define LED_0            5
-#define LED_1            6
-#define RX_PIN           2
-#define TX_PIN           3
+#define MAIN_BUTTON      4
+//#define RESET_BUTTON     1
+#define LED_0            3
+#define LED_1            2
+//#define RX_PIN           2
+//#define TX_PIN           3
 // Times determined experimentally
 #define TIME_POWER       4000
 #define TIME_PAIR_ON     200

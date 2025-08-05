@@ -43,9 +43,9 @@ void BtControl::_set_timer(int time_ms) {
 
 void BtControl::write_io(int output, int value) {
   if (value == 1) {
-    PORTB = 0x00;
+    PORTB &= 0b11110111;
   } else {
-    PORTB = 0xFF;
+    PORTB |= 0b00001000;
   }
 };
 
@@ -70,7 +70,7 @@ void BtControl::_timer_callback() {
       if (!_timer) {
         this->_module_state = ACTIVE;
         this->write_io(MAIN_BUTTON, 0);
-        __debug_print("Moving to state active");
+        //__debug_print("Moving to state active");
       }
       break;
     case POWER_OFF:
@@ -84,7 +84,7 @@ void BtControl::_timer_callback() {
       this->_module_state = PAIR_PUSH_1;
       this->_timer = TIME_PAIR_ON;
       this->write_io(MAIN_BUTTON, 1);
-      __debug_print("Pair!");
+      //__debug_print("Pair!");
       break;
     case PAIR_PUSH_1:
       // Write to I/O twice in quick succession
@@ -92,7 +92,7 @@ void BtControl::_timer_callback() {
         this->_module_state = PAIR_PUSH_2;
         this->_timer = TIME_PAIR_OFF;
         this->write_io(MAIN_BUTTON, 0);
-        __debug_print("Moving to state push 2");
+        //__debug_print("Moving to state push 2");
       }
       break;
     case PAIR_PUSH_2:
@@ -101,7 +101,7 @@ void BtControl::_timer_callback() {
         this->_module_state = PAIR_PUSH_3;
         this->_timer = TIME_PAIR_ON;
         this->write_io(MAIN_BUTTON, 1);
-        __debug_print("Moving to state push 3");
+        //__debug_print("Moving to state push 3");
       }
       break;
     case PAIR_PUSH_3:
@@ -110,7 +110,7 @@ void BtControl::_timer_callback() {
         this->_module_state = PAIR_WAIT;
         this->write_io(MAIN_BUTTON, 0);
         this->_timer = TIME_PAIR_OFF*2;
-        __debug_print("Moving to state push wait");
+        //__debug_print("Moving to state push wait");
       }
       break;
     case PAIR_WAIT:
@@ -118,19 +118,19 @@ void BtControl::_timer_callback() {
       if (!_timer) {
         this->_module_state = PAIRING;
         this->_timer = TIME_PAIR_SAMPLE*3;
-        __debug_print("Waiting for pair");
+        //__debug_print("Waiting for pair");
       }
       break;
     case PAIRING:
       // Sample LED outputs
       // The purpose of this function is to sample the LED outputs from the Airfly Pro
       // to determine if the Airfly Pro is still in it's pairing state.
-      this->_led0_acc += (PIND & (1 << LED_0)) ? 1 : 0;
-      this->_led1_acc += (PIND & (1 << LED_1)) ? 1 : 0;
+      this->_led0_acc += (PINB & (1 << LED_0)) ? 1 : 0;
+      this->_led1_acc += (PINB & (1 << LED_1)) ? 1 : 0;
       if (!_timer) {
         if (this->_led0_acc < LED_VALID_SAMPLE || this->_led1_acc < LED_VALID_SAMPLE) {
           this->_module_state = ACTIVE;
-          __debug_print("Sampling success");
+          //__debug_print("Sampling success");
           Serial.println(this->_led0_acc);
           Serial.println(this->_led1_acc);
         }
