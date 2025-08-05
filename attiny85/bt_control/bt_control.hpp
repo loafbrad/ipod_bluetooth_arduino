@@ -1,10 +1,10 @@
 #ifndef __BT_CONTROL_H__
 #define __BT_CONTROL_H__
 
-#define MAIN_BUTTON      4
+#define MAIN_BUTTON      3
 //#define RESET_BUTTON     1
-#define LED_0            3
-#define LED_1            2
+#define LED_0            2
+#define LED_1            4
 //#define RX_PIN           2
 //#define TX_PIN           3
 // Times determined experimentally

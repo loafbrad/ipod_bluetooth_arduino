@@ -131,8 +131,8 @@ void BtControl::_timer_callback() {
         if (this->_led0_acc < LED_VALID_SAMPLE || this->_led1_acc < LED_VALID_SAMPLE) {
           this->_module_state = ACTIVE;
           //__debug_print("Sampling success");
-          Serial.println(this->_led0_acc);
-          Serial.println(this->_led1_acc);
+        //  Serial.println(this->_led0_acc);
+        //  Serial.println(this->_led1_acc);
         }
         this->_led0_acc = 0;
         this->_led1_acc = 0;

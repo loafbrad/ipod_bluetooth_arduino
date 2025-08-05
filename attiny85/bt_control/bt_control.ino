@@ -1,4 +1,4 @@
-// ATtiny45 implementation
+// ATtiny85 implementation
 // Removed debug prints to save memory
 #include <SoftwareSerial.h>
 #include "bt_control.hpp"
@@ -12,11 +12,11 @@ void setup() {
   Serial.begin(9600);
 
   // Connecting the LED pin outputs on the Airfly Pro to these two input pins
- // pinMode(LED_0, INPUT_PULLUP);
+  //pinMode(LED_0, INPUT_PULLUP);
  // pinMode(LED_1, INPUT_PULLUP);
   DDRB  |= 0b00001000;
-  DDRB  &= 0b11101111;
-  PORTB |= 0b00001000;
+  DDRB  &= 0b11101011;
+  PORTB |= 0b00011100;
 
   // Configure internal timer
   // Section 12.3 of ATtiny25/45/85 [DATASHEET] Rev. 2586Q–AVR–08/2013
@@ -40,9 +40,7 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 void loop() {
-  if ((PINB&(1 << PINB4)))  airfly_state.power_on();
-
-
+  //Serial.println("test");
   if (Serial.available() > 0) {
     // Read serial input from the iPod
     String fromipod = Serial.readStringUntil('\n');
